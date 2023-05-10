@@ -1,0 +1,1 @@
+[![Build status](https://ci.appveyor.com/api/projects/status/q45q83u2e3npscvg/branch/main?svg=true)](https://ci.appveyor.com/project/KovalevskayaX5/orderdebetcard/branch/main)
