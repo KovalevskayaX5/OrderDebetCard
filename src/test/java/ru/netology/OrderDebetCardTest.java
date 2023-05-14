@@ -1,5 +1,6 @@
 package ru.netology;
 
+import com.codeborne.selenide.impl.WebElementSelector;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -23,12 +24,13 @@ public class OrderDebetCardTest {
     }
 
     @Test
-    void testEnglishNaneNegative() {
+    void testEnglishNameNegative() {
         $("[data-test-id=name] input").setValue("Kovalevskaya Yana");
         $("[data-test-id=phone] input").setValue("+79896340085");
         $("[data-test-id=agreement]").click();
         $("button").click();
-        $(withText("Имя и Фамилия указаные неверно.")).shouldBe(visible);
+        $("[data-test-id=name].input_invalid .input__sub").shouldHave(exactText("Имя и Фамилия указаные неверно. Допустимы только русские буквы, пробелы и дефисы."));
+
 
     }
 
@@ -38,7 +40,8 @@ public class OrderDebetCardTest {
         $("[data-test-id=phone] input").setValue("+79896340");
         $("[data-test-id=agreement]").click();
         $("button").click();
-        $(withText("Телефон указан неверно.")).shouldBe(visible);
+        $("[data-test-id=phone].input_invalid .input__sub").shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
+       // $(withText("Телефон указан неверно.")).shouldBe(visible);
     }
 
     @Test
@@ -47,7 +50,9 @@ public class OrderDebetCardTest {
         $("[data-test-id=phone] input").setValue("+79896340085");
         $("[data-test-id=agreement]");
         $("button").click();
-        $(withText("Ваша заявка успешно отправлена!")).shouldNotBe(visible);
+        $("[data-test-id=order-success]").shouldNotBe(visible);
+
+        //$(withText("Ваша заявка успешно отправлена!")).shouldNotBe(visible);
 
     }
 
@@ -57,7 +62,9 @@ public class OrderDebetCardTest {
         $("[data-test-id=phone] input").setValue("+798963400854585");
         $("[data-test-id=agreement]").click();
         $("button").click();
-        $(withText("Телефон указан неверно.")).shouldBe(visible);
+        $("[data-test-id=phone].input_invalid .input__sub").shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
+
+        //$(withText("Телефон указан неверно.")).shouldBe(visible);
 
     }
 
@@ -67,9 +74,30 @@ public class OrderDebetCardTest {
         $("[data-test-id=phone] input").setValue("89896340085");
         $("[data-test-id=agreement]").click();
         $("button").click();
-        $(withText("Телефон указан неверно.")).shouldBe(visible);
-        
+        $("[data-test-id=phone].input_invalid .input__sub").shouldHave(exactText("Телефон указан неверно. Должно быть 11 цифр, например, +79012345678."));
+        //$(withText("Телефон указан неверно.")).shouldBe(visible);
+
     }
+    @Test
+    void testEmptyName() {
+        $("[data-test-id=name] input").setValue(" ");
+        $("[data-test-id=phone] input").setValue("+79896340085");
+        $("[data-test-id=agreement]").click();
+        $("button").click();
+        $("[data-test-id=name].input_invalid .input__sub").shouldHave(exactText("Поле обязательно для заполнения"));
+
+    }
+    @Test
+    void testEmptyPhone() {
+        $("[data-test-id=name] input").setValue("Ковалевская Яна ");
+        $("[data-test-id=phone] input").setValue(" ");
+        $("[data-test-id=agreement]").click();
+        $("button").click();
+        $("[data-test-id=phone].input_invalid .input__sub").shouldHave(exactText("Поле обязательно для заполнения"));
+
+
+    }
+
 
 
 }
